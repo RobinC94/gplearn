@@ -123,7 +123,7 @@ class _Program(object):
     def __init__(self,
                  function_set,
                  ts_function_set,
-                 d_ls,
+                 d_list,
                  arities,
                  init_depth,
                  init_method,
@@ -139,7 +139,7 @@ class _Program(object):
 
         self.function_set = function_set
         self.ts_function_set = ts_function_set
-        self.d_ls = d_ls
+        self.d_list = d_list
         self.arities = arities
         self.init_depth = (init_depth[0], init_depth[1] + 1)
         self.init_method = init_method
@@ -194,7 +194,7 @@ class _Program(object):
             function = self.function_set[function]
         else:
             function = make_ts_function(self.ts_function_set[function - len(self.function_set)],
-                                        self.d_ls, random_state)
+                                        self.d_list, random_state)
 
         program = [function]
         terminal_stack = [function.arity]
@@ -216,7 +216,7 @@ class _Program(object):
                     function = self.function_set[function]
                 else:
                     function = make_ts_function(self.ts_function_set[function - len(self.function_set)],
-                                                self.d_ls, random_state)
+                                                self.d_list, random_state)
 
                 program.append(function)
                 terminal_stack.append(function.arity)
@@ -670,7 +670,7 @@ class _Program(object):
                 replacement = random_state.randint(replacement)
                 replacement = self.arities[arity][replacement]
                 if replacement.is_ts:
-                    replacement = make_ts_function(replacement, self.d_ls, random_state)
+                    replacement = make_ts_function(replacement, self.d_list, random_state)
                 program[node] = replacement
             else:
                 # We've got a terminal, add a const or variable
@@ -693,17 +693,17 @@ class _Program(object):
     indices_ = property(_indices)
 
 
-def make_ts_function(function, d_ls, random_state):
+def make_ts_function(function, d_list, random_state):
     """
     make time sequence function
 
     Args:
         function (_Function): time sequence function
-        d_ls (list): range of 'd
+        d_list (list): range of 'd
         random_state (RandomState): random generator
     """
-    d = random_state.randint(len(d_ls))
-    d = d_ls[d]
+    d = random_state.randint(len(d_list))
+    d = d_list[d]
     function_ = copy(function)
     function_.set_d(d)
     return function_

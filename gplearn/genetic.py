@@ -42,7 +42,7 @@ def _parallel_evolve(n_programs, parents, X, y, sample_weight, seeds, params):
     tournament_size = params['tournament_size']
     function_set = params['function_set']
     ts_function_set = params['ts_function_set']
-    d_ls = params['d_ls']
+    d_list = params['d_list']
     arities = params['arities']
     init_depth = params['init_depth']
     init_method = params['init_method']
@@ -118,7 +118,7 @@ def _parallel_evolve(n_programs, parents, X, y, sample_weight, seeds, params):
 
         program = _Program(function_set=function_set,
                            ts_function_set=ts_function_set,
-                           d_ls=d_ls,
+                           d_list=d_list,
                            arities=arities,
                            init_depth=init_depth,
                            init_method=init_method,
@@ -181,7 +181,7 @@ class BaseSymbolic(BaseEstimator, metaclass=ABCMeta):
                  init_method='half and half',
                  function_set=('add', 'sub', 'mul', 'div'),
                  ts_function_set=(),
-                 d_ls=(),
+                 d_list=(),
                  transformer=None,
                  metric='mean absolute error',
                  parsimony_coefficient=0.001,
@@ -210,7 +210,7 @@ class BaseSymbolic(BaseEstimator, metaclass=ABCMeta):
         self.init_method = init_method
         self.function_set = function_set
         self.ts_function_set = ts_function_set
-        self.d_ls = d_ls
+        self.d_list = d_list
         self.transformer = transformer
         self.metric = metric
         self.parsimony_coefficient = parsimony_coefficient
@@ -444,7 +444,7 @@ class BaseSymbolic(BaseEstimator, metaclass=ABCMeta):
             params['_transformer'] = None
         params['function_set'] = self._function_set
         params['ts_function_set'] = self._ts_function_set
-        params['d_ls'] = self.d_ls
+        params['d_list'] = self.d_list
         params['arities'] = self._arities
         params['method_probs'] = self._method_probs
 
@@ -1421,7 +1421,7 @@ class SymbolicTransformer(BaseSymbolic, TransformerMixin):
                  init_method='half and half',
                  function_set=('add', 'sub', 'mul', 'div'),
                  ts_function_set=(),
-                 d_ls=(),
+                 d_list=(),
                  metric='pearson',
                  parsimony_coefficient=0.001,
                  p_crossover=0.9,
@@ -1448,7 +1448,7 @@ class SymbolicTransformer(BaseSymbolic, TransformerMixin):
             init_method=init_method,
             function_set=function_set,
             ts_function_set=ts_function_set,
-            d_ls=d_ls,
+            d_list=d_list,
             metric=metric,
             parsimony_coefficient=parsimony_coefficient,
             p_crossover=p_crossover,
