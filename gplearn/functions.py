@@ -15,35 +15,61 @@ from joblib import wrap_non_picklable_objects
 __all__ = ['make_function']
 
 
+# class _Function(object):
+
+#     """A representation of a mathematical relationship, a node in a program.
+
+#     This object is able to be called with NumPy vectorized arguments and return
+#     a resulting vector based on a mathematical relationship.
+
+#     Parameters
+#     ----------
+#     function : callable
+#         A function with signature function(x1, *args) that returns a Numpy
+#         array of the same shape as its arguments.
+
+#     name : str
+#         The name for the function as it should be represented in the program
+#         and its visualizations.
+
+#     arity : int
+#         The number of arguments that the ``function`` takes.
+
+#     """
+
+#     def __init__(self, function, name, arity):
+#         self.function = function
+#         self.name = name
+#         self.arity = arity
+
+#     def __call__(self, *args):
+#         return self.function(*args)
+
+
 class _Function(object):
 
-    """A representation of a mathematical relationship, a node in a program.
-
-    This object is able to be called with NumPy vectorized arguments and return
-    a resulting vector based on a mathematical relationship.
-
-    Parameters
-    ----------
-    function : callable
-        A function with signature function(x1, *args) that returns a Numpy
-        array of the same shape as its arguments.
-
-    name : str
-        The name for the function as it should be represented in the program
-        and its visualizations.
-
-    arity : int
-        The number of arguments that the ``function`` takes.
-
-    """
-
-    def __init__(self, function, name, arity):
+    def __init__(self, function, name, arity, is_ts=False, params_need=None):
         self.function = function
         self.name = name
         self.arity = arity
 
+        # new param
+        self.is_ts = is_ts  # bool, if is time sequence function
+        self.d = 0  # int, roll out days for function
+        self.params_need = params_need  # list, some TA-Lib method needs
+    
     def __call__(self, *args):
-        return self.function(*args)
+        if not self.is_ts:
+            return self.function(*args)
+        else:
+            if self.d == 0:
+                raise AttributeError("Please reset attribute 'd'")
+            else:
+                return self.function(*args, self.d)
+    
+    def set_d(self, d):
+        self.d = d
+        self.name += '_%d' % self.d
 
 
 def make_function(*, function, name, arity, wrap=True):
